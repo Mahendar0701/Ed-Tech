@@ -38,6 +38,7 @@
           class="col-start-2 col-span-4 bg-white rounded-lg shadow-md p-8 text-center"
         >
           <h2 class="my-5 text-2xl font-bold"><%= courseDetails.title %></h2>
+          <% if (isInstructor) { %>
           <span class="my-5 mb-10">
             <a
               href="/course/<%= courseId %>/createModule"
@@ -45,6 +46,7 @@
               >+ Add Module</a
             >
           </span>
+          <% } %>
 
           <div class="justify-between mt-5">
             <% for( var i=0 ; i < moduleDetails.length ; i++) { %>
@@ -62,9 +64,8 @@
                   </p>
                 </a>
               </div>
-              <div class="grid grid-cols-7">
+              <!-- <div class="grid grid-cols-7">
                 <div class="flex justify-center col-start-2 col-span-5">
-                  <!--Keep Styling such that sub-topics are just included in the topic-->
                   <div class="m-auto gap-4">
                     <ul
                       id="topics<%= i %>"
@@ -78,7 +79,7 @@
                           </h3>
                         </a>
                       </li>
-                      <% } %>
+                      <% } %> <% if (isInstructor) { %>
                       <span class="my-5 mb-10">
                         <a
                           href="/course/<%= courseId %>/module/<%= moduleDetails[i].id %>/createSubModule"
@@ -86,10 +87,11 @@
                           >+ Add Sub Module</a
                         >
                       </span>
+                      <% } %>
                     </ul>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
             <% } %>
           </div>

@@ -325,7 +325,7 @@ app.post("/createCourse", connectEnsureLogin.ensureLoggedIn(), async function (r
             syllabus: request.body.syllabus.split(","),
             prerequisites: request.body.prerequisites,
             image: request.body.imageUrl,
-            price: request.body.price,
+            // price: request.body.price,
             description: request.body.description,
             instructorId: user.id,
             instructor: userName,
@@ -341,7 +341,7 @@ app.post("/createCourse", connectEnsureLogin.ensureLoggedIn(), async function (r
             course.enrolledStudents + 1,
             courseId
         );
-        await session.save();
+        await course.save();
 
         return response.redirect("/home");
 
@@ -401,7 +401,7 @@ app.post(
                 course.enrolledStudents + 1,
                 courseId
             );
-            await session.save();
+            await course.save();
             // response.redirect(`/sessions/${sessionId}`);
             return response.json({ success: true });
         } catch (error) {
@@ -421,19 +421,25 @@ app.get(
             const courseDetails = await Course.getCourse(courseId);
             const moduleDetails = await Moddule.getCourseModules(courseId);
             // const subModuleDetails = await Moddule.getCourseSubModules(courseId);
+            let isInstructor = false;
+            if (request.user.id === courseDetails.instructorId) {
+                isInstructor = true;
+            }
 
             if (request.accepts("html")) {
                 response.render("moduleList", {
                     courseDetails,
                     courseId,
-                    moduleDetails
+                    moduleDetails,
+                    isInstructor
 
                 });
             } else {
                 response.json({
                     courseDetails,
                     courseId,
-                    moduleDetails
+                    moduleDetails,
+                    isInstructor
 
                 });
             }
@@ -505,6 +511,10 @@ app.get(
             const courseDetails = await Course.getCourse(courseId);
             const moduleDetails = await Moddule.getModule(moduleId);
             const subModuleDetails = await SubModule.getCourseSubModules(moduleId);
+            let isInstructor = false;
+            if (request.user.id === courseDetails.instructorId) {
+                isInstructor = true;
+            }
 
             if (request.accepts("html")) {
                 response.render("moduleDetails", {
@@ -512,7 +522,8 @@ app.get(
                     moduleDetails,
                     courseId,
                     moduleId,
-                    subModuleDetails
+                    subModuleDetails,
+                    isInstructor
                 });
             } else {
                 response.json({
@@ -520,7 +531,8 @@ app.get(
                     moduleDetails,
                     courseId,
                     moduleId,
-                    subModuleDetails
+                    subModuleDetails,
+                    isInstructor
                 });
             }
         } catch (error) {
@@ -555,7 +567,6 @@ app.get(
             console.log(error);
             return response.status(422).json(error);
         }
-        response.render("createModule");
     }
 );
 
