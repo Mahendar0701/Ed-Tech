@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>Create Session</title>
+  </head>
+  <body class="bg-gray-100">
+    <%- include('navbar') %>
+    <div class="container mx-auto p-6">
+      <div
+        class="max-w-2xl mx-auto bg-white rounded-lg shadow-md overflow-hidden"
+      >
+        <div class="text-center py-6">
+          <h1 class="text-3xl font-semibold text-gray-800">
+            Create New Course
+          </h1>
+        </div>
+        <form
+          action="/createCourse"
+          method="post"
+          class="px-6 py-4 grid grid-cols-2 gap-8"
+        >
+          <div>
+            <label for="title" class="text-lg font-medium text-gray-700"
+              >Name of the Course</label
+            >
+            <input
+              name="title"
+              class="border border-gray-300 px-3 py-2 mt-1 rounded-md w-full"
+              type="text"
+            />
+          </div>
+          <div>
+            <label for="imageUrl" class="text-lg font-medium text-gray-700"
+              >Image URL</label
+            >
+            <input
+              name="imageUrl"
+              class="border border-gray-300 px-3 py-2 mt-1 rounded-md w-full"
+              type="text"
+            />
+          </div>
+          <div>
+            <label for="startDate" class="text-lg font-medium text-gray-700"
+              >Course Start Date</label
+            >
+            <input
+              name="startDate"
+              class="border border-gray-300 px-3 py-2 mt-1 rounded-md w-full"
+              type="datetime-local"
+              min="<%= new Date().toISOString().slice(0, 16) %>"
+            />
+          </div>
+          <div>
+            <label for="endDate" class="text-lg font-medium text-gray-700"
+              >Course End Date</label
+            >
+            <input
+              name="endDate"
+              class="border border-gray-300 px-3 py-2 mt-1 rounded-md w-full"
+              type="datetime-local"
+              min="<%= new Date().toISOString().slice(0, 16) %>"
+            />
+          </div>
+          <div>
+            <label for="level" class="text-lg font-medium text-gray-700"
+              >Course Level</label
+            >
+            <select
+              name="level"
+              class="border border-gray-300 px-3 py-2 mt-1 rounded-md w-full"
+            >
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="difficult">Difficult</option>
+            </select>
+          </div>
+          <div>
+            <label for="category" class="text-lg font-medium text-gray-700"
+              >Category</label
+            >
+            <input
+              name="category"
+              class="border border-gray-300 px-3 py-2 mt-1 rounded-md w-full"
+              type="text"
+            />
+          </div>
+          <div>
+            <label for="syllabus" class="text-lg font-medium text-gray-700"
+              >Syllabus (comma-separated)</label
+            >
+            <input
+              type="text"
+              name="syllabus"
+              id="syllabus"
+              class="border border-gray-300 px-3 py-2 mt-1 rounded-md w-full"
+            />
+          </div>
+          <div>
+            <label for="prerequisites" class="text-lg font-medium text-gray-700"
+              >Prerequisites</label
+            >
+            <input
+              name="prerequisites"
+              class="border border-gray-300 px-3 py-2 mt-1 rounded-md w-full"
+              type="text"
+            />
+          </div>
+          <div>
+            <label for="description" class="text-lg font-medium text-gray-700"
+              >Description</label
+            >
+            <textarea
+              name="description"
+              class="border border-gray-300 px-3 py-2 mt-1 rounded-md w-full"
+              rows="4"
+              type="text"
+            ></textarea>
+          </div>
+
+          <div class="col-span-2 flex justify-center">
+            <button
+              type="submit"
+              class="bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-md"
+            >
+              Create
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

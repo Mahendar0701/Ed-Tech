@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.2/plyr.css" />
+    <script src="https://cdn.plyr.io/3.6.2/plyr.js"></script>
+    <script src="https://www.youtube.com/player_api"></script>
+  </head>
+  <body>
+    <%- include('navbar') %>
+    <br />
+    <br />
+    <div class="container mx-auto my-10 py-8">
+      <div class="grid grid-cols-6 gap-4">
+        <div class="col-start-2 col-span-4 bg-white rounded-lg shadow-md p-8">
+          <!-- <%= subModuleDetails.description %> <%= subModuleDetails.title %>  -->
+          <div class="my-5 text-2xl font-semibold">
+            <h2>
+              <a href="">Chapter <%= 1 %>: Introduction</a> >
+              <a href=""><%= subModuleDetails.title %></a>
+            </h2>
+          </div>
+          <hr />
+          <div class="my-5 text-2xl font-semibold">
+            <h2><%= subModuleDetails.title %></h2>
+          </div>
+          <div class="my-5 text-xl">
+            <p><%= subModuleDetails.description %></p>
+          </div>
+          <div class="flex-justify-center">
+            <div class="my-5 mx-64 text-xl m-auto">
+              <img
+                class="w-96"
+                src="<%= subModuleDetails.imageLink %>"
+                alt=""
+              />
+            </div>
+          </div>
+          <hr />
+          <!-- <iframe
+            src="https://drive.google.com/file/d/1-NZIMItbKrdWbqodoLuH5wQmF0SWMOhu/view?usp=sharing"
+            width="640"
+            height="480"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
+          <video controls width="560">
+            <source
+              src="https://drive.google.com/file/d/1-NZIMItbKrdWbqodoLuH5wQmF0SWMOhu/view?usp=sharing"
+              type="video/mp4"
+            />
+            Your browser does not support the video tag.
+          </video> -->
+
+          <!-- Video Player Container -->
+          <div id="player-container" class="my-5 mx-12 text-xl"></div>
+
+          <!-- JavaScript code -->
+          <script>
+            // Extract video ID from YouTube video link
+            function getVideoIdFromUrl(url) {
+              // Match the video ID using regular expression
+              const match = url.match(
+                /(?:youtu.be\/|youtube(?:-nocookie)?.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/
+              );
+
+              // Return the video ID or null if no match is found
+              return match ? match[1] : null;
+            }
+
+            // YouTube Player API callback function
+            function onYouTubePlayerAPIReady() {
+              // Get the video link
+              const videoLink = "<%= subModuleDetails.videoLink %>"; // Replace with your video link
+
+              // Extract the video ID from the link
+              const videoId = getVideoIdFromUrl(videoLink);
+
+              // Create the YouTube player
+              if (videoId) {
+                const player = new YT.Player("player-container", {
+                  videoId: videoId,
+                  width: 850,
+                  height: 400,
+                });
+              }
+            }
+          </script>
+          <br />
+          <div>
+            <h2 class="my-5 text-xl font-bold">Material</h2>
+            <% if(1) { %>
+            <a
+              href="https://drive.google.com/file/d/1-SegzQT6ODsAZWqmqnwnDbRkFIp996I8/view?usp=sharing"
+              >Download PDF</a
+            >
+
+            <br />
+            <% } else { %>
+            <input type="file" />
+            <% } %>
+          </div>
+
+          <hr />
+          <div class="my-5 mx-20 p-4">
+            <span class="float-right">
+              <a
+                href="#"
+                class="border border-gray-600 text-white bg-cyan-600 hover:bg-cyan-800 my-3 font-medium rounded px-8 py-3 text-xl"
+                >Previous</a
+              >
+            </span>
+            <span class="float-left">
+              <a
+                href="#"
+                class="border border-gray-600 text-white bg-cyan-600 hover:bg-cyan-800 my-3 font-medium rounded px-8 py-3 text-xl"
+                >Next</a
+              >
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+  </body>
+</html>

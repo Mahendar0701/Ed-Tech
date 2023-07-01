@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.2/plyr.css" />
+    <script src="https://cdn.plyr.io/3.6.2/plyr.js"></script>
+    <script src="https://www.youtube.com/player_api"></script>
+    <title>Document</title>
+    <style>
+      .sub-topics {
+        display: none;
+        visibility: hidden;
+      }
+      .topic-link {
+        background-color: #60a5fa;
+        color: white;
+        transition: background-color 1s ease;
+      }
+      .topic-link:hover {
+        background-color: #2563eb;
+      }
+      .sub-topic {
+        background-color: white;
+        padding: 0.5rem;
+        margin-top: 0.5rem;
+        border-radius: 0.25rem;
+      }
+      .sub-topic:hover {
+        color: #2563eb;
+        background-color: aliceblue;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('navbar') %>
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <title>Document</title>
+      </head>
+      <body>
+        <div class="container mx-auto my-10 py-8">
+          <div class="grid grid-cols-6 gap-4">
+            <div
+              class="col-start-2 col-span-4 bg-white rounded-lg shadow-md p-8"
+            >
+              <h2 class="my-5 text-2xl font-bold text-center">
+                <%= courseDetails.title %>
+              </h2>
+              <P class="my-5 text-2xl font-bold text-center"
+                ><%= moduleDetails.title %></P
+              >
+              <h2 class="my-5 text-2xl"><%= moduleDetails.description %></h2>
+              <img
+                class="w-96 mx-64"
+                src="<%= moduleDetails.imageLink %>"
+                alt=""
+              />
+              <hr />
+              <!-- Video Player Container -->
+              <div id="player-container" class="my-5 mx-12 text-xl"></div>
+
+              <!-- JavaScript code -->
+              <script>
+                // Extract video ID from YouTube video link
+                function getVideoIdFromUrl(url) {
+                  // Match the video ID using regular expression
+                  const match = url.match(
+                    /(?:youtu.be\/|youtube(?:-nocookie)?.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/
+                  );
+
+                  // Return the video ID or null if no match is found
+                  return match ? match[1] : null;
+                }
+
+                // YouTube Player API callback function
+                function onYouTubePlayerAPIReady() {
+                  // Get the video link
+                  const videoLink = "<%= moduleDetails.videoLink %>"; // Replace with your video link
+
+                  // Extract the video ID from the link
+                  const videoId = getVideoIdFromUrl(videoLink);
+
+                  // Create the YouTube player
+                  if (videoId) {
+                    const player = new YT.Player("player-container", {
+                      videoId: videoId,
+                      width: 850,
+                      height: 400,
+                    });
+                  }
+                }
+              </script>
+              <div class="my-5 mt-10 text-center">
+                <a
+                  href="/module/<%= moduleDetails.id %>/createSubModule"
+                  class="border border-gray-600 text-white bg-cyan-600 hover:bg-cyan-800 my-3 font-medium rounded px-3 py-2"
+                  >+ Add Sub Module</a
+                >
+              </div>
+
+              <div class="justify-between mt-5 text-center">
+                <% for( var i=0 ; i < subModuleDetails.length ; i++) { %>
+
+                <div class="justify-center">
+                  <div class="my-1">
+                    <a
+                      href="/module/sub/<%= subModuleDetails[i].id %>/subModuleDetails"
+                      class=""
+                      onclick="toggleTopics(event, 'topics<%= i %>')"
+                    >
+                      <p
+                        class="topic-link text-xl my-3 font-medium rounded mx-36 py-5"
+                      >
+                        Module <%= i+1 %>: <%= subModuleDetails[i].title %>
+                      </p>
+                    </a>
+                  </div>
+                </div>
+                <% } %>
+              </div>
+              <hr />
+              <hr />
+              <div>
+                <h2 class="text-xl float-right">-Instructor Name</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+    </html>
+  </body>
+</html>
