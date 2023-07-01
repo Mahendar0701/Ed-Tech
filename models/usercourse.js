@@ -29,6 +29,11 @@ module.exports = (sequelize, DataTypes) => {
       });
       return userCourse !== null;
     }
+    static async getAllUpcomingUserCourses(userId) {
+      return this.findAll({ where: { userId } })
+    }
+
+
   }
   UserCourse.init({
     userId: DataTypes.INTEGER,

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Courses | EdTech</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="flex flex-col min-h-screen">
+    <!-- Navigation Bar -->
+
+    <nav class="bg-gray-100"><%- include('navbar') %></nav>
+
+    <!-- Page Header -->
+    <header class="py-8">
+      <div class="container mx-auto">
+        <h1 class="text-3xl font-semibold text-gray-800 mx-5">My Courses</h1>
+      </div>
+    </header>
+
+    <section class="flex-grow py-8 mx-5">
+      <div class="container mx-auto">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+        >
+          <!-- Course Cards -->
+          <!-- Use a loop to dynamically generate course cards -->
+          <% for(var i = 0; i < myCoursesList.length; i++) { %>
+          <div class="bg-white rounded-lg shadow-md">
+            <img
+              src="<%= myCoursesList[i].image %>"
+              alt="<%= myCoursesList[i].title %>"
+              class="w-full h-40 object-cover rounded-t-lg"
+            />
+            <div class="p-4">
+              <h2 class="text-lg font-semibold text-gray-800">
+                <%= myCoursesList[i].title %>
+              </h2>
+              <p class="text-sm text-gray-600 mt-2">
+                Instructor: <%= myCoursesList[i].instructor %>
+              </p>
+              <a
+                href="/course/<%= myCoursesList[i].id %>"
+                class="block text-blue-500 hover:underline mt-4"
+                >Go to Course</a
+              >
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-4 mt-auto">
+      <div class="container mx-auto text-center">
+        <p class="text-gray-600">&copy; 2023 EdTech. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>

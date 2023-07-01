@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About | EdTech</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Custom Styles */
+      .bg-about {
+        background-image: url("https://campustechnology.com/-/media/EDU/CampusTechnology/2020-images/20201009ai.jpg");
+        background-size: cover;
+        background-position: center;
+      }
+    </style>
+  </head>
+  <body class="">
+    <%- include('navbar') %>
+    <!-- Hero Section -->
+    <section class="bg-about py-20">
+      <div class="container mx-auto text-center">
+        <h1 class="text-4xl text-white font-semibold mb-4">About EdTech</h1>
+        <p class="text-lg text-white">
+          Providing Quality Education for Everyone
+        </p>
+      </div>
+    </section>
+
+    <!-- Content Section -->
+    <section class="py-16 mx-5">
+      <div class="container mx-auto">
+        <div class="flex flex-wrap">
+          <div class="w-full lg:w-1/2 lg:pr-8">
+            <h2 class="text-3xl font-semibold mb-4">Our Mission</h2>
+            <p class="text-gray-700 leading-loose">
+              At EdTech, we believe that education should be accessible to
+              everyone, regardless of their location or financial status. Our
+              mission is to provide high-quality online courses that empower
+              individuals to learn new skills, advance their careers, and
+              achieve their goals. We strive to create an inclusive learning
+              community where students can engage with expert instructors,
+              collaborate with peers, and gain practical knowledge that can be
+              applied in real-world situations.
+            </p>
+          </div>
+          <div class="w-full lg:w-1/2 mt-8 lg:mt-0">
+            <img
+              src="https://img.freepik.com/free-vector/e-learning-education-template-vector-technology-ad-banner_53876-125996.jpg?size=626&ext=jpg&ga=GA1.1.713668693.1685668411&semt=ais"
+              alt="About EdTech"
+              class="w-full rounded-lg"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-200 py-8">
+      <div class="container mx-auto text-center">
+        <p class="text-gray-600">© 2023 EdTech. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>

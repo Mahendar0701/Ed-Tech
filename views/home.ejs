@@ -24,11 +24,13 @@
           class="bg-white text-blue-600 hover:py-5 py-3 px-8 rounded-md font-medium"
           >Get Started</a
         >
+        <% if ( isInstructor) { %>
         <a
           href="/createCourse"
           class="bg-white text-blue-600 hover:py-5 py-3 px-8 rounded-md font-medium"
           >Create Course</a
         >
+        <% } %>
       </div>
     </header>
 
@@ -99,7 +101,7 @@
                 were well-structured and the instructors were highly
                 knowledgeable. I highly recommend it!"
               </p>
-              <p class="mt-4 font-semibold">John Doe</p>
+              <p class="mt-4 font-semibold">Joe Root</p>
             </div>
           </div>
           <div class="max-w-md mx-auto md:mx-0">
@@ -109,7 +111,7 @@
                 platform is user-friendly and the support team is always
                 helpful. Thank you!"
               </p>
-              <p class="mt-4 font-semibold">Jane Smith</p>
+              <p class="mt-4 font-semibold">Steve Smith</p>
             </div>
           </div>
         </div>

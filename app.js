@@ -15,7 +15,7 @@ app.set("views", path.join(__dirname, "views"));
 const passport = require("passport");
 const connectEnsureLogin = require("connect-ensure-login");
 const session = require("express-session");
-// const flash = require("connect-flash");
+const flash = require("connect-flash");
 const localStrategy = require("passport-local");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// app.use(flash());
+app.use(flash());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser("sshh! some secret string"));
@@ -43,10 +43,10 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.use(function (request, response, next) {
-//   response.locals.messages = request.flash();
-//   next();
-// });
+app.use(function (request, response, next) {
+    response.locals.messages = request.flash();
+    next();
+});
 
 passport.use(
     new localStrategy(
@@ -87,9 +87,19 @@ passport.deserializeUser((id, done) => {
         });
 });
 
-app.get("/signin", (request, response) => {
-    response.render("signin", { title: "Login" });
+function requireTeacher(req, res, next) {
+    if (req.user && req.user.role === "teacher") {
+        return next();
+    } else {
+        res.status(401).json({ message: "Unauthorized user" });
+    }
+}
+
+app.get("/login", (request, response) => {
+    response.render("login", { title: "Login" });
 });
+
+
 app.get("/", (request, response) => {
     response.render("index", { title: "Login" });
 });
@@ -158,9 +168,9 @@ app.post("/users", async (request, response) => {
 });
 
 app.post(
-    "/signin",
+    "/login",
     passport.authenticate("local", {
-        failureRedirect: "/signin",
+        failureRedirect: "/login",
         failureFlash: true,
     }),
     async (request, response) => {
@@ -183,29 +193,25 @@ app.get(
     "/home", connectEnsureLogin.ensureLoggedIn(),
     async (request, response, next) => {
         try {
-            // const user = request.user;
-            // const userName = user.firstName + " " + user.lastName;
+            const user = request.user;
+            const userName = user.firstName + " " + user.lastName;
             const upcomingCourses = await Course.getAllUpcomingCourses();
-
-            // const allUpcomingInstructorCourses = await Course.geUpcomingtCourseByInstructor(request.user.id);
-
-            // const isAdmin = user.isAdmin;
-            // const userId = request.user.id;
-
-            // const userUpcomingSessionsIds = await UserSession.getSessionsByUser(
-            //   userId
-            // );
-
+            let isInstructor = false;
+            if (user.role === "teacher") {
+                isInstructor = true;
+            }
 
 
             if (request.accepts("html")) {
                 response.render("home", {
                     upcomingCourses,
+                    isInstructor,
 
                 });
             } else {
                 response.json({
                     upcomingCourses,
+                    isInstructor,
 
                 });
             }
@@ -220,16 +226,96 @@ app.get(
 
 
 app.get(
-    "/createCourse", connectEnsureLogin.ensureLoggedIn(),
+    "/createCourse", requireTeacher, connectEnsureLogin.ensureLoggedIn(),
     async (request, response, next) => {
         response.render("createCourse");
     }
 );
+app.get(
+    "/about",
+    async (request, response, next) => {
+        response.render("about");
+    }
+);
+app.get(
+    "/myCourses", connectEnsureLogin.ensureLoggedIn(),
+    async (request, response, next) => {
+        const user = request.user;
+        const userName = user.firstName + " " + user.lastName;
+        const userCourseIds = await UserCourse.getAllUpcomingUserCourses(user.id);
+        let myCoursesList = [];
+        for (let i = 0; i < userCourseIds.length; i++) {
+            myCoursesList.push(await Course.getCourse(userCourseIds[i].courseId))
+        }
+        console.log("..........", myCoursesList)
+        if (request.accepts("html")) {
+            response.render("myCourses", {
+                myCoursesList,
+                // isInstructor,
+
+            });
+        } else {
+            response.json({
+                myCoursesList,
+                // isInstructor,
+
+            });
+        }
+    }
+);
+
+app.get(
+    "/changePassword",
+    connectEnsureLogin.ensureLoggedIn(),
+    async (request, response) => {
+        response.render("changePassword", {
+            userName: request.user.firstName + " " + request.user.lastName,
+            title: "Change Password",
+        });
+    }
+);
+
+app.post(
+    "/changePassword",
+    connectEnsureLogin.ensureLoggedIn(),
+    async (request, response) => {
+        const oldPassword = request.body.oldPassword;
+        const newPassword = request.body.newPassword;
+        try {
+            const user = request.user;
+            const oldHashedPassword = user.password;
+            const isPasswordMatch = await bcrypt.compare(
+                oldPassword,
+                oldHashedPassword
+            );
+            if (!isPasswordMatch) {
+                request.flash("error", "Invalid old password");
+                return response.redirect("/changePassword");
+            }
+            const saltRounds = 10;
+            const newHashedPassword = await bcrypt.hash(newPassword, saltRounds);
+            user.password = newHashedPassword;
+            await User.update(
+                { password: user.password },
+                { where: { id: user.id } }
+            );
+            request.flash("success", "Password changed successfully");
+            response.redirect("/changePassword");
+        } catch (error) {
+            console.log(error);
+            request.flash("error", "An error occurred while changing the password");
+            response.redirect("/changePassword");
+        }
+    }
+);
+
+
 
 app.post("/createCourse", connectEnsureLogin.ensureLoggedIn(), async function (request, response) {
     try {
         console.log("title....", request.body.title)
-
+        const user = request.user;
+        const userName = request.user.firstName + " " + request.user.lastName;
         const course = await Course.create({
             title: request.body.title,
             startDate: request.body.startDate,
@@ -241,15 +327,23 @@ app.post("/createCourse", connectEnsureLogin.ensureLoggedIn(), async function (r
             image: request.body.imageUrl,
             price: request.body.price,
             description: request.body.description,
-            instructorId: null,
-            instructor: null,
+            instructorId: user.id,
+            instructor: userName,
             enrolledStudents: null,
             rating: null,
             resources: null,
             duration: null,
         });
 
-        return response.redirect("/");
+        const courseId = course.id;
+        await UserCourse.addUser(user.id, courseId);
+        await Course.updateStudents(
+            course.enrolledStudents + 1,
+            courseId
+        );
+        await session.save();
+
+        return response.redirect("/home");
 
     } catch (error) {
         console.log(error);
@@ -300,11 +394,11 @@ app.post(
     async (request, response) => {
         try {
             const courseId = request.params.id;
-            const session = await Course.getCourse(courseId);
+            const course = await Course.getCourse(courseId);
             const user = request.user;
             await UserCourse.addUser(user.id, courseId);
             await Course.updateStudents(
-                session.enrolledStudents + 1,
+                course.enrolledStudents + 1,
                 courseId
             );
             await session.save();
@@ -351,7 +445,7 @@ app.get(
 );
 
 app.get(
-    "/course/:id/createModule", connectEnsureLogin.ensureLoggedIn(),
+    "/course/:id/createModule", requireTeacher, connectEnsureLogin.ensureLoggedIn(),
     async (request, response, next) => {
         try {
             // const user = request.user;
@@ -437,7 +531,7 @@ app.get(
 );
 
 app.get(
-    "/module/:id/createSubModule", connectEnsureLogin.ensureLoggedIn(),
+    "/module/:id/createSubModule", requireTeacher, connectEnsureLogin.ensureLoggedIn(),
     async (request, response, next) => {
         try {
             // const user = request.user;
