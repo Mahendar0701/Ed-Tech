@@ -1,6 +1,6 @@
-# EduTech Web Application
+# EdTech Web Application
 
-https://wd-edtech-mahendar.onrender.com/
+[EdTech](https://wd-edtech-mahendar.onrender.com/)
 
 ## Description
 
@@ -12,9 +12,9 @@ The Application is not yet fully developed . We have to include more features
 
 ## Usage
 
-1.Creating Courses and modules by instructor
-2.Displaying available courses
-3.Joining courses
+1. Creating Courses and modules by instructor
+2. Displaying available courses
+3. Joining courses
 
 
 ## Technologies Used
